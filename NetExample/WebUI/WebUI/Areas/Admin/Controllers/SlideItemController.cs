@@ -1,6 +1,8 @@
 ﻿using Core.Entities;
 using DataAccess.Contexts;
 using Microsoft.AspNetCore.Mvc;
+using WebUI.Utilities;
+using WebUI.ViewModels.Slider;
 
 namespace WebUI.Areas.Admin.Controllers
 {
@@ -9,9 +11,11 @@ namespace WebUI.Areas.Admin.Controllers
     {
 
         private readonly AppDbContext _context;
-        public SlideItemController(AppDbContext context)
+        public readonly  IWebHostEnvironment _env;
+        public SlideItemController(AppDbContext context, IWebHostEnvironment env)
         {
             _context=context;   
+            _env=env;
         }
         public IActionResult Index()
         {
@@ -19,19 +23,54 @@ namespace WebUI.Areas.Admin.Controllers
         }
         public IActionResult Detail(int id)
         {
-            var model=_context.SlideItems.Find(id);
-            if(model == null) return NotFound();    
-            return View(model);
+            var slide=_context.SlideItems.Find(id);
+            if(slide == null) return NotFound();    
+            return View(slide);
         }
         public async Task<IActionResult> Create()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Create(SlideItem slideItem)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(SlideCreateVM slide)
         {
-           if(!ModelState.IsValid) return View(slideItem);
-           await _context.SlideItems.AddAsync(slideItem);
+            
+           if(!ModelState.IsValid) return View(slide);
+            if (slide.Photo == null) 
+            {
+                ModelState.AddModelError("Photo","Photo is null");
+                return View(slide);
+            }
+            if (!slide.Photo.CheckFileSize(1))
+            {
+                ModelState.AddModelError("Photo", "Photo lenght is more than limits");
+                return View(slide);
+            }
+            if (!slide.Photo.CheckFileFormat("image/"))
+            {
+                ModelState.AddModelError("Photo", "Content type must be Image!");
+                return View(slide);
+            }
+            return Content("ok");
+
+            var wwwroot = _env.WebRootPath;
+            var fileName=Guid.NewGuid() + slide.Photo.FileName; 
+            var path=Path.Combine(wwwroot, fileName);
+
+            using (FileStream fs=new FileStream(path,FileMode.Create))
+            {
+                await  slide.Photo.CopyToAsync(fs);
+            }
+            SlideItem slideItem = new()
+            {
+                Title = slide.Title,
+                Description = slide.Description,
+                Offer = slide.Offer,
+                Photo = fileName
+
+            };
+            await _context.SlideItems.AddAsync(slideItem);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

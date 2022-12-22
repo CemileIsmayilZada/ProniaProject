@@ -1,0 +1,17 @@
+﻿@model ShippingItem
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<h1>Detail:</h1>
+<p>@Model.Id</p>
+<p>@Model.Title</p>
+<p>@Model.Description</p>
+<p>@Model.Image</p>
+
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Submit</button>
+</form>
+<a class="btn btn-primary mr-4" asp-area="Admin" asp-controller="ShippingItem" asp-action="Index"> Go back </a>
+

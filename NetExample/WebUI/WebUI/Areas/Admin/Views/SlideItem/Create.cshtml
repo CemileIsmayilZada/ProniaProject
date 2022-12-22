@@ -1,10 +1,11 @@
-﻿@model SlideItem
+﻿@using WebUI.ViewModels.Slider
+@model SlideCreateVM
 @{
     ViewData["Title"] = "Create";
 }
 <div class="bg-light rounded h-100 p-4">
     <h6 class="mb-4"> Form for Creating Shipping item</h6>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
 
             <label>Title</label>
