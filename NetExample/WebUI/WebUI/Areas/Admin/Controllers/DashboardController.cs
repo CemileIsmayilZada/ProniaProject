@@ -13,7 +13,7 @@ namespace WebUI.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.ShippingItems);
+            return View(_context.SlideItems);
         }
     }
 }

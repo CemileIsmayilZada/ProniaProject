@@ -1,46 +1,9 @@
-﻿@model IEnumerable<ShippingItem>
+﻿@model IEnumerable<SlideItem>
 @{
     ViewData["Title"] = "Index";
 }
 
-<a class="btn btn-primary" asp-area="Admin" asp-controller="ShippingItem" asp-action="Create" style="color:red">Create</a>
-<div class="table-responsive">
-    <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
-        <thead>
-            <tr>
-                
-                <th class="text-center">Image</th>
-                <th class="text-center">Title</th>
-                <th class="text-center">Actions</th>
-             </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-
-                    <td class="text-center" style="width: 80px;">
-                        <img alt="" class="rounded-circle" src="~/assets/images/shipping/icon/@item.Image" width="40">
-                    </td>
-                    <td class="text-center">
-                        @item.Title
-                    </td>
-
-                    <td class="text-center">
-                        
-                            <a class="btn btn-primary " asp-area="Admin" asp-controller="ShippingItem" asp-action="Detail" asp-route-Id="@item.Id" style="color:white">Detail</a>
-                            <a class="btn btn-primary " asp-area="Admin" asp-controller="ShippingItem" asp-action="Update" asp-route-Id="@item.Id" style="color:blue">Update</a>
-                            <a class="btn btn-primary" asp-area="Admin" asp-controller="ShippingItem" asp-action="Delete" asp-route-Id="@item.Id"  style="color: green">Delete</a>
-
-                        
-                     </td>
-                 </tr>
-
-            }
-                
-        </tbody>
-    </table>
-</div>
+<h1>Dashboard Index</h1>
 
 
    
