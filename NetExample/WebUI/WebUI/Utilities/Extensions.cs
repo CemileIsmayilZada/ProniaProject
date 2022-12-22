@@ -14,7 +14,7 @@ namespace WebUI.Utilities
         {
             return file.ContentType.Contains(fileFormat);
         }
-        public static async Task<string> CopyFileAsync(this IFormFile file, string wwwroot,, string filename,params string[] folders)
+        public static async Task<string> CopyFileAsync(this IFormFile file, string wwwroot,string filename,params string[] folders)
         {
            
         }
