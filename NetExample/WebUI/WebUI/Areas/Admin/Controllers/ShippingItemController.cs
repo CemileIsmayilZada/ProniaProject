@@ -7,7 +7,7 @@ namespace WebUI.Areas.Admin.Controllers
     [Area("Admin")]
     public class ShippingItemController : Controller
     {
-        private AppDbContext _context;
+        private readonly AppDbContext _context;
 
         public ShippingItemController(AppDbContext context)
         {

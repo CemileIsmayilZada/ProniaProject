@@ -1,0 +1,48 @@
+﻿@model IEnumerable<SlideItem>
+@{
+    ViewData["Title"] = "Index";
+}
+<p>
+<a class="btn btn-primary" asp-area="Admin" asp-controller="SlideItem" asp-action="Create" style="color:white">Create New Slide Item</a>
+</p>
+<div class="table-responsive">
+    <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+        <thead>
+            <tr>
+
+                <th class="text-center">Photo</th>
+                <th class="text-center">Title</th>
+                <th class="text-center">Offer</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+
+                    <td class="text-center" style="width: 80px;">
+                        <img alt="" class="rounded-circle" src="~/assets/images/website-images/@item.Photo" width="40">
+                    </td>
+                    <td class="text-center">
+                        @item.Title
+                    </td>
+                    <td class="text-center">
+                        @item.Offer
+                    </td>
+                    <td class="text-center">
+
+                        <a class="btn btn-primary " asp-area="Admin" asp-controller="SlideItem" asp-action="Detail" asp-route-Id="@item.Id" style="color:white">Detail</a>
+                        <a class="btn btn-primary " asp-area="Admin" asp-controller="SlideItem" asp-action="Update" asp-route-Id="@item.Id" style="color:white">Update</a>
+                        <a class="btn btn-primary" asp-area="Admin" asp-controller="SlideItem" asp-action="Delete" asp-route-Id="@item.Id" style="color:white">Delete</a>
+
+
+                    </td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+</div>
+

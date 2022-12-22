@@ -6,7 +6,7 @@ namespace WebUI.Areas.Admin.Controllers
     [Area("Admin")]
     public class DashboardController : Controller
     {
-        private AppDbContext _context;
+        private readonly AppDbContext _context;
         public DashboardController(AppDbContext context)
         {
             _context=context;
