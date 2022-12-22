@@ -54,14 +54,18 @@ namespace WebUI.Areas.Admin.Controllers
             }
             return Content("ok");
 
-            var wwwroot = _env.WebRootPath;
-            var fileName=Guid.NewGuid() + slide.Photo.FileName; 
-            var path=Path.Combine(wwwroot, fileName);
 
-            using (FileStream fs=new FileStream(path,FileMode.Create))
+            var fileName = string.Empty;
+            try
             {
-                await  slide.Photo.CopyToAsync(fs);
+                fileName = await slide.Photo.CopyFileAsync(_env.WebRootPath, "assets", "images", "website-images");
             }
+            catch (Exception)
+            {
+                return View(slide);
+            }
+            await slide.Photo.CopyFileAsync(_env.WebRootPath, "assets", "images", "website-images");
+          
             SlideItem slideItem = new()
             {
                 Title = slide.Title,
