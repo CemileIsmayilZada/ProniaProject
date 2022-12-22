@@ -80,7 +80,7 @@
 }
 
 .content {
-    margin-left: 0;
+    margin-left: 250px;
     min-height: 100vh;
     background: #FFFFFF;
     transition: 0.5s;
@@ -96,8 +96,7 @@
     }
 
     .content {
-        margin-left: 43px;
-        width: 100% !important;
+        width: calc(100% - 250px);
     }
 
     .content.open {

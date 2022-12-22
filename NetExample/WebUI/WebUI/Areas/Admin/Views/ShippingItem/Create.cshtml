@@ -1,0 +1,32 @@
+﻿@model ShippingItem
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="bg-light rounded h-100 p-4">
+    <h6 class="mb-4"> Form for Creating Shipping item</h6>
+    <form method="post">
+        <div class="mb-3">
+
+            <label>Title</label>
+            <input asp-for="Title" class="form-control" >
+            <span class="text-danger" asp-validation-for="Title"></span>
+
+        </div>
+        <div class="mb-3">
+
+            <label>Description</label>
+            <input asp-for="Description" class="form-control">
+            <span class="text-danger" asp-validation-for="Description"></span>
+
+        </div>
+        <div class="mb-3">
+
+            <label>Image</label>
+            <input asp-for="Image" class="form-control">
+            <span class="text-danger" asp-validation-for="Image"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
