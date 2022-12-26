@@ -1,4 +1,5 @@
 using DataAccess.Contexts;
+using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,8 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 var constr = builder.Configuration["ConnectionStrings:default"];
 builder.Services.AddDbContext<AppDbContext>(opt =>opt.UseSqlServer(constr));
-var app = builder.Build();
 
+builder.Services.AddScoped<IShippingItemRepository,ShippingItemRepository>();
+var app = builder.Build();
 app.UseStaticFiles();
 app.MapControllerRoute(
     name: "areas",

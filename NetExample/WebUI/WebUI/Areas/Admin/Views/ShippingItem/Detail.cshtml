@@ -7,6 +7,9 @@
 <p>@Model.Id</p>
 <p>@Model.Title</p>
 <p>@Model.Description</p>
-<p>@Model.Image</p>
 
-<a class="btn btn-primary mr-4" asp-area="Admin" asp-controller="ShippingItem" asp-action="Index" > Go back </a>
+<img src="~/assets/images/shipping/icon/@Model.Image" height="50px" />
+<div>
+    <a class="btn btn-primary mr-4" asp-area="Admin" asp-controller="ShippingItem" asp-action="Index"> Go back </a>
+</div>
+

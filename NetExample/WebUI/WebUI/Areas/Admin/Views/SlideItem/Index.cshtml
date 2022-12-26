@@ -34,7 +34,7 @@
 
                         <a class="btn btn-primary " asp-area="Admin" asp-controller="SlideItem" asp-action="Detail" asp-route-Id="@item.Id" style="color:white">Detail</a>
                         <a class="btn btn-primary " asp-area="Admin" asp-controller="SlideItem" asp-action="Update" asp-route-Id="@item.Id" style="color:white">Update</a>
-                        <a class="btn btn-primary" asp-area="Admin" asp-controller="SlideItem" asp-action="Delete" asp-route-Id="@item.Id" style="color:white">Delete</a>
+                        <a class="btn btn-primary @(ViewBag.Count==1 ? "disabled":"")" asp-area="Admin" asp-controller="SlideItem" asp-action="Delete" asp-route-Id="@item.Id" style="color:white" >Delete</a>
 
 
                     </td>

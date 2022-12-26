@@ -12,7 +12,7 @@ public class SlideCreateVM
     [MaxLength(100)]
     public string? Offer { get; set; }
     [Required]
-    public IFormFile Photo { get; set; }
+    public IFormFile? Photo { get; set; }
     [MaxLength(255)]
     public string? Description { get; set; }
 }

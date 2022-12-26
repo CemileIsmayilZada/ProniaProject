@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using System.Linq;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace WebUI.Utilities
 {
@@ -24,11 +25,12 @@ namespace WebUI.Utilities
                 {
                     resultpath = Path.Combine(resultpath, folder);
                 }
+                resultpath = Path.Combine(resultpath, fileName);
                 using (FileStream fs = new FileStream(resultpath, FileMode.Create))
                 {
                     await file.CopyToAsync(fs);
                 }
-                return resultpath;
+                return fileName;
             }
             catch (Exception)
             {
