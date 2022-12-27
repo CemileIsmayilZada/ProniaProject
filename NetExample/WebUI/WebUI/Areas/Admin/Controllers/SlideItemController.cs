@@ -78,15 +78,15 @@ namespace WebUI.Areas.Admin.Controllers
                 Title = slide.Title,
                 Description = slide.Description,
                 Offer = slide.Offer,
-                Photo =fileName
+                Photo = fileName
 
             };
 
-           
+
             await _context.SlideItems.AddAsync(slideItem);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            
+
         }
 
         public async Task<IActionResult> Update(int id)
@@ -94,52 +94,66 @@ namespace WebUI.Areas.Admin.Controllers
             var model = _context.SlideItems.Find(id);
             if (model == null) return View(model);
 
-            var path = String.Empty;
-            path=Helper.CreatePath(_env.WebRootPath, "assets", "images", "website-images",model.Photo);
-
-            SlideCreateVM slider = new();
-            using (var stream = System.IO.File.OpenRead(path))
+            SlideUpdateVM slider = new()
             {
 
-                slider.Title = model.Title;
-                slider.Description = model.Description;
-                slider.Offer = model.Offer;
-
-             
-                slider.Photo = new FormFile(stream, 0, stream.Length,null, Path.GetFileName(stream.Name));
-
-                
-
-            }
-
+                Title = model.Title,
+                Description = model.Description,
+                Offer = model.Offer,
+                ImagePath = model.Photo
+            };
             return View(slider);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id,SlideCreateVM slide)
+        public async Task<IActionResult> Update(int id, SlideUpdateVM slide)
         {
             if (id != slide.Id) return BadRequest();
             if (!ModelState.IsValid) return View(slide);
             var model = _context.SlideItems.Find(id);
             if (model == null) return View(model);
-          
+
+            //SlideItem slideItem = new();
+            model.Title = slide.Title;
             model.Description = slide.Description;
             model.Offer = slide.Offer;
-            Helper.DeleteFile(model.Photo);
+            if (slide.Photo != null)
+            {
+                Helper.DeleteFile(_env.WebRootPath, "assets", "images", "website-images", model.Photo);
+                if (!slide.Photo.CheckFileSize(100))
+                {
+                    ModelState.AddModelError("Photo", "Photo lenght is more than limits (100)");
+                    return View(slide);
+                }
+                if (!slide.Photo.CheckFileFormat("image/"))
+                {
+                    ModelState.AddModelError("Photo", "Content type must be Image!");
+                    return View(slide);
+                }
 
+                var fileName = string.Empty;
+                try
+                {
+                    fileName = await slide.Photo.CopyFileAsync(_env.WebRootPath, "assets", "images", "website-images");
+                }
+                catch (Exception)
+                {
+                    return View(slide);
+                }
+                model.Photo = fileName;
 
-            
-            model.Photo = slide.Photo.FileName;
+            }
+           
 
-            return Content(slide.Photo.FileName);
-            //await _context.SlideItems.AddAsync(model);
-            //await _context.SaveChangesAsync();
-            //return RedirectToAction(nameof(Index));
+            _context.Update(model);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+
         }
 
-        public  IActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
-            if(_count==1) return BadRequest();
+            if (_count == 1) return BadRequest();
             var slide = _context.SlideItems.Find(id);
             if (slide == null) return NotFound();
             return View(slide);
@@ -157,10 +171,10 @@ namespace WebUI.Areas.Admin.Controllers
             //folderden silme
 
             Helper.DeleteFile(_env.WebRootPath, "assets", "images", "website-images", slide.Photo);
-           
+
             //database-den silme
             _context.Remove(slide);
-            await _context.SaveChangesAsync();  
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
     }

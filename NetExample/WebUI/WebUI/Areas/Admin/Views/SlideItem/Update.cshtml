@@ -1,5 +1,5 @@
 ﻿@using WebUI.ViewModels.Slider
-@model SlideCreateVM
+@model SlideUpdateVM
 @{
     ViewData["Title"] = "Create";
 }
@@ -20,11 +20,15 @@
             <span class="text-danger" asp-validation-for="Offer"></span>
 
         </div>
+        <div>
+            <img src="~/assets/images/website-images/@Model.ImagePath" />
+        </div>
         <div class="mb-3">
 
             <label>Photo</label>
             <input asp-for="Photo" class="form-control">
-            <span class="text-danger" asp-validation-for="Photo"></span>
+
+            
         </div>
 
         <div class="mb-3">
