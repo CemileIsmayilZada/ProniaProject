@@ -17,12 +17,22 @@ namespace WebUI.Controllers
         //Test
         public IActionResult Index()
         {
+
+            HttpContext.Session.SetString("name", "Metin");
+            Response.Cookies.Append("surname", "Iskenderov");
             HomeVM homeVM = new()
             {
                 SlideItem = _context.SlideItems,
                 ShippingItem = _context.ShippingItems
             };
             return View(homeVM);
+        }
+
+        public IActionResult Test() 
+        {
+            var s=HttpContext.Session.GetString("name");
+            var c = Request.Cookies["surname"];
+            return Json(s + " " + c);
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using Core.Entities;
 using DataAccess.Contexts;
+using DataAccess.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using System.IO;
@@ -13,24 +14,25 @@ namespace WebUI.Areas.Admin.Controllers
     [Area("Admin")]
     public class SlideItemController : Controller
     {
-
-        private readonly AppDbContext _context;
+        private ISliderItemRepository _repository;
+        
         public readonly IWebHostEnvironment _env;
         private int _count;
-        public SlideItemController(AppDbContext context, IWebHostEnvironment env)
+        public SlideItemController(ISliderItemRepository repository, IWebHostEnvironment env)
         {
-            _context = context;
+            _repository = repository;
+            
             _env = env;
-            _count = _context.SlideItems.Count();
+         //   _count = _repository.Count();
         }
         public IActionResult Index()
         {
             ViewBag.Count = _count;
-            return View(_context.SlideItems);
+            return View(_repository);
         }
         public IActionResult Detail(int id)
         {
-            var slide = _context.SlideItems.Find(id);
+            var slide = _repository.GetAsync(id);
             if (slide == null) return NotFound();
             return View(slide);
         }
@@ -83,15 +85,15 @@ namespace WebUI.Areas.Admin.Controllers
             };
 
 
-            await _context.SlideItems.AddAsync(slideItem);
-            await _context.SaveChangesAsync();
+            await _repository.CreateAsync(slideItem);
+            await _repository.SaveAsync();
             return RedirectToAction(nameof(Index));
 
         }
 
         public async Task<IActionResult> Update(int id)
         {
-            var model = _context.SlideItems.Find(id);
+            var model =  await _repository.GetAsync(id);
             if (model == null) return View(model);
 
             SlideUpdateVM slider = new()
@@ -110,7 +112,7 @@ namespace WebUI.Areas.Admin.Controllers
         {
             if (id != slide.Id) return BadRequest();
             if (!ModelState.IsValid) return View(slide);
-            var model = _context.SlideItems.Find(id);
+            var model = await _repository.GetAsync(id);
             if (model == null) return View(model);
 
             //SlideItem slideItem = new();
@@ -145,8 +147,8 @@ namespace WebUI.Areas.Admin.Controllers
             }
            
 
-            _context.Update(model);
-            await _context.SaveChangesAsync();
+            _repository.Update(model);
+            await _repository.SaveAsync();
             return RedirectToAction(nameof(Index));
 
         }
@@ -154,7 +156,7 @@ namespace WebUI.Areas.Admin.Controllers
         public IActionResult Delete(int id)
         {
             if (_count == 1) return BadRequest();
-            var slide = _context.SlideItems.Find(id);
+            var slide = _repository.GetAsync(id);
             if (slide == null) return NotFound();
             return View(slide);
         }
@@ -165,7 +167,7 @@ namespace WebUI.Areas.Admin.Controllers
         public async Task<IActionResult> DeletePost(int id)
         {
             if (_count == 1) return BadRequest();
-            var slide = _context.SlideItems.Find(id);
+            var slide = await _repository.GetAsync(id);
             if (slide == null) return NotFound();
 
             //folderden silme
@@ -173,8 +175,8 @@ namespace WebUI.Areas.Admin.Controllers
             Helper.DeleteFile(_env.WebRootPath, "assets", "images", "website-images", slide.Photo);
 
             //database-den silme
-            _context.Remove(slide);
-            await _context.SaveChangesAsync();
+            _repository.Delete(slide);
+            await _repository.SaveAsync();
             return RedirectToAction(nameof(Index));
         }
     }
